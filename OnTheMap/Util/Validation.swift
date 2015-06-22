@@ -14,10 +14,8 @@ class Validation {
     class func validateURL(urlString: String) -> Bool {
         
         let urlRegEx = "(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+"
-        if let urlPredicate = NSPredicate(format: "SELF MATCHES %@", urlRegEx) {
-            return urlPredicate.evaluateWithObject(urlString)
-        }
-        return false
+        let urlPredicate = NSPredicate(format: "SELF MATCHES %@", urlRegEx)
+        return urlPredicate.evaluateWithObject(urlString)
     }
     
 }

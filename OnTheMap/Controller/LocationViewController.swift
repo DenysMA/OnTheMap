@@ -101,7 +101,7 @@ class LocationViewController: UIViewController, UITextFieldDelegate {
                 
                 // Prepare next view controller and set student Location variable
                 
-                var resourceVC = segue.destinationViewController as ResourceViewController
+                var resourceVC = segue.destinationViewController as! ResourceViewController
                 
                 if let placemarks = sender as? [CLPlacemark] {
                     
@@ -125,7 +125,7 @@ class LocationViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         locationTextField.resignFirstResponder()
     }
     

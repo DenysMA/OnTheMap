@@ -78,7 +78,7 @@ class TabViewController: UIViewController, UIAlertViewDelegate {
             if identifier == "postStudentLocation" {
                 
                 // Set studentLocation variable if user posted information previously
-                let locationVC = segue.destinationViewController as LocationViewController
+                let locationVC = segue.destinationViewController as! LocationViewController
                 locationVC.studentLocation = ParseClient.sharedInstance().getCurrentUserLocation()
             }
         }

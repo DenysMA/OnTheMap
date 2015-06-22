@@ -55,116 +55,105 @@ class ResourceViewController: UIViewController, UITextViewDelegate, UIGestureRec
     @IBAction func postStudentLocation(sender: UIButton) {
         
         // Validate URL String is well formed
-        if Validation.validateURL(mediaTextView.text) {
+        if !Validation.validateURL(mediaTextView.text) {
             
-            // Try to create URL as a second validation
-            if let url = NSURL(string: mediaTextView.text) {
+            // Show validation error
+            Message.showErrorMessage("Invalid URL", error: "Please verify your URL (e.g. http(s)://www.udacity.com)")
+            return
+        }
+            
+        // Try to create URL from string
+        if let url = NSURL(string: mediaTextView.text) {
+            studentLocation.mediaURL = url.absoluteString!
+        }
+        else {
+            // Show message if URL was not able to be initialized
+            Message.showErrorMessage("Error parsing URL", error: "Error creating URL")
+            return
+        }
+        
+        if studentLocation.objectID.isEmpty {
+            
+            // Create post using Parse Client
+            
+            hud.labelText = "Posting Location"
+            hud.show(true)
+            
+            // Call post student location service
+            ParseClient.sharedInstance().postStudentLocation(studentLocation) { sucess, error in
                 
-                studentLocation.mediaURL = url.absoluteString!
-                
-                // Create post using Parse Client
-                
-                if studentLocation.objectID.isEmpty {
+                // Displays error
+                if let error = error {
                     
-                    hud.labelText = "Posting Location"
-                    hud.show(true)
-                    
-                    // Call post student location service
-                    ParseClient.sharedInstance().postStudentLocation(studentLocation) {
+                    dispatch_async(dispatch_get_main_queue()) {
                         
-                        sucess, error in
-                        
-                        // Displays error
-                        if let error = error {
-                            
-                            dispatch_async(dispatch_get_main_queue()) {
-                                
-                                self.hud.hide(true)
-                                Message.showErrorMessage("Error posting information", error: error)
-                            }
-                            println(error)
-                        }
-                        
-                        else {
-                            
-                            // If post was created dismiss modal view
-                            dispatch_async(dispatch_get_main_queue()) {
-                                
-                                self.hud.hide(true)
-                                Message.showConfirmationMessage("Information posted", view: self.view) {
-                                    
-                                    if let presentingVC = self.presentingViewController?.presentingViewController {
-                                        presentingVC.dismissViewControllerAnimated(true, completion: nil)
-                                    }
-                                }
-                            }
-                        }
-                        
+                        self.hud.hide(true)
+                        Message.showErrorMessage("Error posting information", error: error)
+                        println(error)
                     }
                 }
+                    
                 else {
                     
-                    // Update a new post using Parse Client
-                    
-                    hud.labelText = "Updating Location"
-                    hud.show(true)
-                    
-                    // Call update student location service
-                    ParseClient.sharedInstance().updateStudentLocation(studentLocation) {
-                        
-                        sucess, error in
-                        
-                        // Display error to the user
-                        if let error = error {
-                         
-                            dispatch_async(dispatch_get_main_queue()) {
-                                
-                                self.hud.hide(true)
-                                Message.showErrorMessage("Error updating information", error: error)
-                            }
-                            println(error)
-                        }
-                        else {
+                    // If post was created, dismiss modal view
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.hud.hide(true)
+                        Message.showConfirmationMessage("Information posted", view: self.view) {
                             
-                            // If success, show confirmation to user and dismiss modal view
-                            dispatch_async(dispatch_get_main_queue()) {
-                                
-                                self.hud.hide(true)
-                                Message.showConfirmationMessage("Information updated", view: self.view) {
-                                    
-                                    if let presentingVC = self.presentingViewController?.presentingViewController {
-                                        presentingVC.dismissViewControllerAnimated(true, completion: nil)
-                                    }
-                                }
-                            }
+                            let presentingVC = self.presentingViewController?.presentingViewController
+                            presentingVC?.dismissViewControllerAnimated(true, completion: nil)
                         }
                     }
                 }
-            }
-            else {
-                // Show message if URL was not able to be initialized
-                Message.showErrorMessage("Error parsing URL", error: "Error creating URL")
+                
             }
         }
         else {
             
-            // Show validation URL error message
-            Message.showErrorMessage("Invalid URL", error: "Please verify your URL (e.g. http(s)://www.udacity.com)")
+            // Update a new post using Parse Client
+            
+            hud.labelText = "Updating Location"
+            hud.show(true)
+            
+            // Call update student location service
+            ParseClient.sharedInstance().updateStudentLocation(studentLocation) { sucess, error in
+                
+                // Display error to the user
+                if let error = error {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.hud.hide(true)
+                        Message.showErrorMessage("Error updating information", error: error)
+                        println(error)
+                    }
+                }
+                else {
+                    // If success, show confirmation to user and dismiss modal view
+                    dispatch_async(dispatch_get_main_queue()) {
+                        
+                        self.hud.hide(true)
+                        Message.showConfirmationMessage("Information updated", view: self.view) {
+                            let presentingVC = self.presentingViewController?.presentingViewController
+                            presentingVC?.dismissViewControllerAnimated(true, completion: nil)
+                        }
+                    }
+                }
+            }
         }
+    
     }
-    
+
     // MARK: - Cancel
-    
+
     @IBAction func Cancel(sender: UIButton) {
         
         // dismiss modal view
         dismissViewControllerAnimated(true, completion: nil)
         
     }
-    
-    
+
+
     // MARK: - TextView  Delegate
-    
+
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         
         if text == "\n" {
@@ -176,5 +165,5 @@ class ResourceViewController: UIViewController, UITextViewDelegate, UIGestureRec
         
         return true
     }
-    
+
 }

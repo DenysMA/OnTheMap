@@ -21,7 +21,7 @@ class ListViewController: TabViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("studentCell", forIndexPath: indexPath) as UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier("studentCell", forIndexPath: indexPath) as! UITableViewCell
         let studentLocation = ParseClient.sharedInstance().studentsLocation[indexPath.row]
         
         cell.textLabel?.text = studentLocation.firstName + " " + studentLocation.lastName

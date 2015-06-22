@@ -87,7 +87,7 @@ class MapViewController: TabViewController, MKMapViewDelegate {
         // Configure Anottation
         
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("annotationView")
-        let detailButton = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as UIButton
+        let detailButton = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
         
         if pinView == nil {
             

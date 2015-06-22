@@ -49,11 +49,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         // Validate email and password
         
-        if countElements(usernameTextField.text) == 0 {
+        if count(usernameTextField.text) == 0 {
             
             errorMessageLabel.text = "Email is empty"
         }
-        else if countElements(passwordTextField.text) == 0 {
+        else if count(passwordTextField.text) == 0 {
             
             errorMessageLabel.text = "Password is empty"
         }
@@ -197,8 +197,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-        
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         usernameTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
     }

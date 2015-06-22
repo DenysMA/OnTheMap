@@ -21,7 +21,7 @@ class EmptyDataSource: NSObject, UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         // return empty cell configured in table view in the story board
-        return tableView.dequeueReusableCellWithIdentifier("emptyCell", forIndexPath: indexPath) as UITableViewCell
+        return tableView.dequeueReusableCellWithIdentifier("emptyCell", forIndexPath: indexPath) as! UITableViewCell
         
     }
     

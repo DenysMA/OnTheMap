@@ -108,7 +108,7 @@ class Client {
             
             // Check for connection errors
             
-            if let error = downloadError? {
+            if let error = downloadError {
                 
                 let userInfo = [NSLocalizedDescriptionKey : "Unable to connect to the server. Please verify your internet connection"]
                 let error = NSError(domain: "Connection Error", code: 1, userInfo: userInfo)
@@ -122,15 +122,12 @@ class Client {
                 if let httpResponse = response as? NSHTTPURLResponse {
                     
                     // If no error return parsed json
-                    
                     if self.validateHttpCode(httpResponse.statusCode) {
-                        
-                        self.parseJSONWithCompletionHandler(data, completionHandler)
+                        self.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
                     }
                     else {
                         
                         // If there is an error, parse it properly and return a new error
-                        
                         let newError = self.errorForData(data, httpStatus: httpResponse.statusCode)
                         completionHandler(result: nil, error: newError)
                     }
@@ -183,7 +180,7 @@ class Client {
         
         let parsedResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
         
-        if let error = parsingError? {
+        if let error = parsingError {
             completionHandler(result: nil, error: error)
         } else {
             completionHandler(result: parsedResult, error: nil)

@@ -17,7 +17,6 @@ class SearchViewController: TabViewController, UITableViewDelegate, UITableViewD
     private var searchResults = [StudentLocation]()
     private let emptyDS = EmptyDataSource()
     
-    
     // Validate search results and switch datasource when there is no results
     func updateCurrentDataSource() {
         
@@ -129,7 +128,7 @@ class SearchViewController: TabViewController, UITableViewDelegate, UITableViewD
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         // Configure cell View
-        let cell = tableView.dequeueReusableCellWithIdentifier("studentCell", forIndexPath: indexPath) as StudentTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("studentCell", forIndexPath: indexPath) as! StudentTableViewCell
         let studentLocation = searchResults[indexPath.row]
         
         // Set student values in labels

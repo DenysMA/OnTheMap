@@ -41,7 +41,7 @@ class UdacityClient: Client {
             
             // If there is an error it returns an error description to the view controller
             
-            if let error = error? {
+            if let error = error {
                 
                 completionHandler(success: false, errorString: error.localizedDescription)
                 println("Error \(error.description)")
@@ -92,7 +92,7 @@ class UdacityClient: Client {
             
             // If there is an error it returns an error description to the view controller
             
-            if let error = error? {
+            if let error = error {
                 
                 var errorMessage = error.description
                 
@@ -155,15 +155,13 @@ class UdacityClient: Client {
                         
                         completionHandler(success: false, errorString: error.localizedDescription)
                         println(error.description)
+                        return
                         
                     }
                     
-                    else {
+                    else if let JSONResult = JSONResult["user"] as? [String: AnyObject] {
                         
                         // Get user first and last name to update those fields in user global variable
-                        
-                        let JSONResult = JSONResult["user"] as Dictionary<String,AnyObject>
-                        
                         if let firstName = JSONResult["first_name"] as? String {
                             self.user?.firstName = firstName
                         }
@@ -177,14 +175,12 @@ class UdacityClient: Client {
                             if !user.firstName.isEmpty && !user.lastName.isEmpty {
                                 
                                 completionHandler(success: true, errorString: nil)
-                            }
-                            else {
-                                
-                                // If the user names are not found, it returns an error
-                                completionHandler(success: false, errorString: "Error account information not found")
+                                return
                             }
                         }
                     }
+                    // If the user names are not found, return error
+                    completionHandler(success: false, errorString: "Error account information not found")
                 }
             }
         }
@@ -202,7 +198,7 @@ class UdacityClient: Client {
         
         let parsedResult: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
         
-        if let error = parsingError? {
+        if let error = parsingError {
             completionHandler(result: nil, error: error)
         } else {
             completionHandler(result: parsedResult, error: nil)
